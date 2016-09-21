@@ -24,7 +24,7 @@ function filterChapters(html) {
 	// 使用$查找内容, 类似于jquery;
 	var chapters = $(".chapter");
 	var title = $("#main h2").text();
-	// 异步加载进来的拿不到学习人数
+	// 注：异步加载进来的拿不到学习人数
 	var number = $(".js-learn-num").text();
 
 	// 期望生成的数据结构
@@ -33,7 +33,7 @@ function filterChapters(html) {
 	// 	number: number,
 	// 	videos:[{
 	// 		chapterTitle: "",
-	// 		videos: [
+	// 		video: [
 	// 			title: "",
 	// 			id: ""
 	// 		]
@@ -46,30 +46,6 @@ function filterChapters(html) {
 		number: number,
 		videos:[]
 	};
-
-	// // 使用each方法
-	// chapters.each(function(item){
-	// 	var chapter = $(this);
-	// 	var chapterTitle = trim(chapter.find("strong").text()).split(/[\r\n]/g)[0];
-	// 	var videos = chapter.find(".video").children("li");
-	// 	var chapterData = {
-	// 		chapterTitle: chapterTitle,
-	// 		videos: []
-	// 	};
-
-	// 	videos.each(function(item){
-	// 		var video = $(this).find(".J-media-item");
-	// 		var videoTitle = trim(video.text()).split("(")[0];
-	// 		var id = video.attr("href").split("video/")[1]
-
-	// 		chapterData.videos.push({
-	// 			title: videoTitle,
-	// 			id: id
-	// 		})
-	// 	});
-
-	// 	courseData.push(chapterData);	
-	// })
 	
 	// 使用for循环
 	for(var i = 0, leng = chapters.length; i < leng; i++) {
@@ -109,10 +85,8 @@ function filterChapters(html) {
 function printCourseInfo(coursesData) {
 
 	coursesData.forEach(function(courseData) {
-
-		console.log(courseData.number + " 人学过 " + courseData.title);
 		
-		console.log("========== " +courseData.title+ " ==========");
+		console.log("========== " +courseData.number+" 人学过 "+courseData.title+ " ==========");
 			
 		courseData.videos.forEach(function(item){
 
@@ -151,19 +125,18 @@ function getPageAsync(url) {
 	});
 }
 
-// 组建一个带爬取的数组
+// 构建一个待爬取的数组
 var fetchCourseArray = [];
 
 // 遍历数组生成章节的链接;
 videoIds.forEach(function(id) {
-	fetchCourseArray.push(getPageAsync(baseUrl + id))
+	fetchCourseArray.push(getPageAsync(baseUrl + id));
 });
 
-// 
+
 Promise
 	.all(fetchCourseArray)
 	.then(function(pages) {
-		// 声明一个
 		var coursesData = [];
 
 		pages.forEach(function(html) {
